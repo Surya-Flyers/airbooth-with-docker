@@ -314,7 +314,7 @@ connections.on("connection", async (socket) => {
       if (_item.invoiceId === item.invoiceId) {
         return item;
       } else {
-        return _item;
+        return _item; //
       }
     });
     calls[callId].peers.forEach((socketId) => {
