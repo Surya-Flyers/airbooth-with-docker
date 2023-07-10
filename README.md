@@ -26,13 +26,30 @@
 
 https://www.youtube.com/watch?v=6p7lylJEjrU
 
-# Steps to RUN :
+# Steps to RUN the app :
 
-- docker-compose build --no-cache
+- docker-compose build --no-cache - (first time only)
 - docker-compose up
 
 For mediasoup frontend Visit - https://127.0.0.1:3000/sfu/anyRoomId
 
-For React Frontend Visit - http://localhost:3006/
+For Tourist (FE app) Visit - http://localhost:3006/
+For Inspector (FE app) Visit - http://localhost:3007/
 
 For Node backend http://localhost:3000/health-checkup
+
+- step-1 : visit Inspector app
+- step-2 : enter any name (ex: inspector-name-007 ) & click connect button
+- step-3 : visit Tourist app
+- step-4 : enter any name (ex: client-name-007 ) & click initiate call button
+- step-5 : visit Inspector app & click on client 0 & give permissions
+- step-6 : visit Tourist app & give permissions.
+<!-- By now call be initiated & you can able to see video -->
+
+# If any packages added to the project :
+
+- Open Docker desktop application
+- click on Containers, find Container named "airbooth" & delete everything
+- click on images & delete everything related to airbooth
+- click on volumes & delete everything related to airbooth
+- go back to vs-code terminal & follow the "Steps to RUN the app" guidelines above
