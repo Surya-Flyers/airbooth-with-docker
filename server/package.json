@@ -1,0 +1,31 @@
+{
+  "name": "example1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "dev": "nodemon --legacy-watch app.js",
+    "watch": "watchify public/index.js -o public/bundle.js -v"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "httpolyglot": "^0.1.2",
+    "mediasoup": "^3.12.3",
+    "mediasoup-client": "^3.6.84",
+    "socket.io-client": "^4.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.10",
+    "socket.io": "^4.6.2",
+    "jsonwebtoken": "^9.0.1",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
