@@ -6,9 +6,13 @@ const schema = new Schema(
     name: String,
     dob: { type: Date },
     email: { type: String, unique: true },
-    tempLoginCode: String,
-    tempLoginToken: String,
-    password: { type: String },
+    phoneNumber: String,
+    designation: Schema.Types.ObjectId,
+    iamUser: Schema.Types.ObjectId,
+    reportingManager: Schema.Types.ObjectId,
+    externalId: String,
+    employeeId: String,
+    lastLogin: { type: Date },
   },
   { timestamps: true }
 );

@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "dev": "nodemon --legacy-watch app.js",
-    "watch": "watchify public/index.js -o public/bundle.js -v"
+    "dev-ts": "npx nodemon",
+    "watch": "watchify public/index.js -o public/bundle.js -v",
+    "build": "rimraf ./build && tsc",
+    "prod-start": "npm run build && node build/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,9 +26,17 @@
     "mongoose": "^5.8.10",
     "socket.io": "^4.6.2",
     "jsonwebtoken": "^9.0.1",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "nodemailer": "^6.9.3",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "typescript": "^5.1.6",
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.4.2",
+    "ts-node": "^10.9.1",
+    "rimraf": "^5.0.1",
+    "@types/morgan": "^1.9.4"
   }
 }

@@ -1,3 +1,4 @@
+// "dev": "nodemon --legacy-watch app.js",
 /**
  * integrating mediasoup server with a node.js application
  */
@@ -25,6 +26,11 @@ import {
 } from "./src/feature/call/repository.js";
 import ItemSchema from "./src/feature/item/schema.js";
 import { getItemsFromPlanet } from "./src/feature/item/repository.js";
+import { sendMaile } from "./src/feature/IAM/user/controller.js";
+import { userRoutes } from "./src/feature/IAM/user/routes.js";
+import { iamClaimRoutes } from "./src/feature/IAM/claim/routes.js";
+import { iamItemRoutes } from "./src/feature/IAM/item/routes.js";
+const { HTTPS_SERVER_PORT, RTC_MIN_PORT, RTC_MAX_PORT } = process.env;
 
 function logger(name = "", items = []) {
   // console.log(`B ---- ${name} ----`);
@@ -63,11 +69,16 @@ app.use(cors(corsOptions));
 //     `You need to specify a room name in the path e.g. 'https://127.0.0.1/sfu/room'`
 //   );
 // });
-
+app.use(express.json());
+userRoutes(app);
+iamClaimRoutes(app);
+iamItemRoutes(app);
 // simple route
 app.get("/health-checkup", (req, res) => {
   res.json({ message: "Yeah, I'm good 👍" });
 });
+
+app.post("/send-mail", sendMaile);
 
 app.use("/sfu/:room", express.static(path.join(__dirname, "public")));
 
@@ -80,8 +91,8 @@ const options = {
 };
 
 const httpsServer = https.createServer(options, app);
-httpsServer.listen(3000, () => {
-  console.log("listening on port: " + 3000);
+httpsServer.listen(HTTPS_SERVER_PORT, () => {
+  console.log("listening on port: " + HTTPS_SERVER_PORT);
 });
 
 const io = new Server(httpsServer, {
@@ -129,8 +140,8 @@ let touristsItems = {}; // { {callId:[items]}, {callId:[items]}}
 
 const createWorker = async () => {
   worker = await mediasoup.createWorker({
-    rtcMinPort: 2000,
-    rtcMaxPort: 2999,
+    rtcMinPort: RTC_MIN_PORT,
+    rtcMaxPort: RTC_MAX_PORT,
   });
   console.log(`worker pid ${worker.pid}`);
 

@@ -73,11 +73,26 @@ services:
     stdin_open: true
     environment:
       - NODE_ENV=development
+  client-IAM-app:
+    image: client-iam-i
+    build:
+      context: ./client/IAM-app
+      dockerfile: Dockerfile
+    container_name: client-IAM-c
+    volumes:
+      - ./client/IAM-app:/client/IAM-app
+      - client-IAM-app-node-modules:/client/IAM-app/node_modules/
+    ports:
+      - "3008:5173"
+    stdin_open: true
+    environment:
+      - NODE_ENV=development
 volumes:
   mongo-db:
   server-node-modules:
   client-airbooth-app-node-modules:
   client-inspector-admin-node-modules:
+  client-IAM-app-node-modules:
 
 networks:
   backend:

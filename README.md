@@ -2,6 +2,8 @@
 
 ## docker-compose rebuild --no-cache
 
+## docker-compose -f docker-compose.dev.yaml build
+
 - build with no cache
 
 ## docker-compose up
