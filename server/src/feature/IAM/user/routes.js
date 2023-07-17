@@ -9,6 +9,7 @@ import {
   verifyInspectorAccountAndSetNewPassword_controller,
   verifyRootUserAndSetNewPassword_controller,
 } from "./controller.js";
+import { iamAuthMiddleware } from "../middlewares/iamAuthMiddleware.js";
 
 export async function userRoutes(app) {
   const router = Router();
@@ -17,7 +18,7 @@ export async function userRoutes(app) {
     "/verify-set-new-password-root",
     verifyRootUserAndSetNewPassword_controller
   );
-  router.get("/login", loginIamUser_controller);
+  router.get("/login", iamAuthMiddleware, loginIamUser_controller);
   router.post("/create-inspector-account", createInspectorAccount_controller);
   router.patch(
     "/verify-inspector-account-set-new-password/:email",

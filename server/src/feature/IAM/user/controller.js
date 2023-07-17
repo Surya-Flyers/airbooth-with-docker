@@ -55,25 +55,6 @@ export async function sendMaile(request, response) {
         user: "frederik.runolfsdottir@ethereal.email",
         pass: "cnAuCgmVj9xDDews2g",
       },
-
-      // const transporter = createTransport({
-      //   service: "gmail",
-      //   host: "smtp.gmail.com",
-      //   // host: "smtp.ethereal.email",
-      //   port: 587,
-      //   auth: {
-      //     user: "suryasirius@gmail.com",
-      //     pass: "ktqvxiqrwrspqens",
-      //   },
-
-      // service: "gmail",
-      // host: "smtp.gmail.com",
-      // // host: "smtp.ethereal.email",
-      // port: 587,
-      // auth: {
-      //   user: "suryasirius@gmail.com",
-      //   pass: "suryaromeo1241999",
-      // },
     });
 
     const info = await transporter.sendMail({
@@ -237,7 +218,7 @@ export async function verifyRootUserAndSetNewPassword_controller(
 export async function loginIamUser_controller(request, response) {
   try {
     const { email, password } = request.body;
-    console.log("email : ", email);
+    console.log("request.headers.auth : ", request.headers.auth);
 
     const inspectorProfile = await findInspectorByEmail({ email });
 
