@@ -550,7 +550,11 @@ function App() {
 
   async function getAllMediaStreams() {
     const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter((device) => device.kind == "videoinput");
+    const cameras = devices.filter(
+      (device) =>
+        device.kind == "videoinput" &&
+        device.label === "HP HD Camera (04f2:b66a)"
+    );
     const streams = [];
     if (cameras.length > 0) {
       for (const _camera of cameras) {
@@ -672,9 +676,12 @@ function App() {
       </button>
 
       <h1>Items</h1>
-      {touristItems.map((item) => {
+      {touristItems.map((item, index) => {
         return (
-          <div style={{ border: "1px solid black", margin: "5px" }}>
+          <div
+            style={{ border: "1px solid black", margin: "5px" }}
+            key={`touristItems-${index}`}
+          >
             <p>
               <strong>name</strong> {`: ${item.name}`}
             </p>

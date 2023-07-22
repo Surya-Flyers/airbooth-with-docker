@@ -33,12 +33,10 @@ https://www.youtube.com/watch?v=6p7lylJEjrU
 - docker-compose build --no-cache - (first time only)
 - docker-compose up
 
-For mediasoup frontend Visit - https://127.0.0.1:3000/sfu/anyRoomId
+For Tourist (FE app) Visit - http://localhost:4006/
+For Inspector (FE app) Visit - http://localhost:4007/
 
-For Tourist (FE app) Visit - http://localhost:3006/
-For Inspector (FE app) Visit - http://localhost:3007/
-
-For Node backend http://localhost:3000/health-checkup
+For Node backend https://127.0.0.1:3000/health-checkup
 
 - step-1 : visit Inspector app
 - step-2 : enter any name (ex: inspector-name-007 ) & click connect button

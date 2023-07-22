@@ -30,7 +30,15 @@ import { sendMaile } from "./src/feature/IAM/user/controller.js";
 import { userRoutes } from "./src/feature/IAM/user/routes.js";
 import { iamClaimRoutes } from "./src/feature/IAM/claim/routes.js";
 import { iamItemRoutes } from "./src/feature/IAM/item/routes.js";
-const { HTTPS_SERVER_PORT, RTC_MIN_PORT, RTC_MAX_PORT } = process.env;
+import { createAdapter } from "@socket.io/redis-adapter";
+import { createClient } from "redis";
+
+const { HTTPS_SERVER_PORT, RTC_MIN_PORT, RTC_MAX_PORT, SERVER_NAME } =
+  process.env;
+
+const pubClient = createClient({ url: "redis://127.0.0.1:6379" });
+// const pubClient = createClient({ url: "redis://localhost:6379" });
+const subClient = pubClient.duplicate();
 
 function logger(name = "", items = []) {
   // console.log(`B ---- ${name} ----`);
@@ -75,7 +83,7 @@ iamClaimRoutes(app);
 iamItemRoutes(app);
 // simple route
 app.get("/health-checkup", (req, res) => {
-  res.json({ message: "Yeah, I'm good 👍" });
+  res.json({ serverName: SERVER_NAME, message: "Yeah, I'm good 👍" });
 });
 
 app.post("/send-mail", sendMaile);
@@ -92,7 +100,10 @@ const options = {
 
 const httpsServer = https.createServer(options, app);
 httpsServer.listen(HTTPS_SERVER_PORT, () => {
-  console.log("listening on port: " + HTTPS_SERVER_PORT);
+  console.log(
+    "listening on port: " + HTTPS_SERVER_PORT + "SERVER_NAME : ",
+    +SERVER_NAME
+  );
 });
 
 const io = new Server(httpsServer, {
@@ -116,6 +127,7 @@ mongoose
     process.exit();
   });
 
+io.adapter(createAdapter(pubClient, subClient));
 // socket.io namespace (could represent a room?)
 const connections = io.of("/mediasoup");
 
@@ -137,13 +149,15 @@ let consumers = []; // [ { socketId1, roomName1, consumer, }, ... ]
 let inspectors = {};
 let tourists = {};
 let touristsItems = {}; // { {callId:[items]}, {callId:[items]}}
-
+// 2000-2999
 const createWorker = async () => {
   worker = await mediasoup.createWorker({
     rtcMinPort: RTC_MIN_PORT,
     rtcMaxPort: RTC_MAX_PORT,
   });
-  console.log(`worker pid ${worker.pid}`);
+  console.log(
+    `worker pid ${worker.pid} RTC_MIN_PORT : ${RTC_MIN_PORT} -- RTC_MAX_PORT : ${RTC_MAX_PORT}`
+  );
 
   worker.on("died", (error) => {
     // This implies something serious happened, so kill the application
@@ -928,6 +942,13 @@ connections.on("connection", async (socket) => {
           SS("consumerTransport", consumerTransport),
         ]);
 
+        console.log(
+          "1 Can consume : ",
+          router.canConsume({
+            producerId: remoteProducerId,
+            rtpCapabilities,
+          })
+        );
         // check if the router can consume the specified producer
         if (
           router.canConsume({
@@ -935,6 +956,7 @@ connections.on("connection", async (socket) => {
             rtpCapabilities,
           })
         ) {
+          console.log("Can consume YES ");
           // transport can now consume and return a consumer
           const consumer = await consumerTransport.consume({
             producerId: remoteProducerId,
@@ -1020,13 +1042,19 @@ const createWebRtcTransport = async (router) => {
           {
             ip: "0.0.0.0", // replace with relevant IP address
             // announcedIp: '10.0.0.115',
+            // announcedIp: "127.0.0.1",
             announcedIp: "127.0.0.1",
           },
         ],
-        enableUdp: true,
+        // enableUdp: true,
         enableTcp: true,
-        preferUdp: true,
+        // preferUdp: true,
       };
+
+      console.log(
+        "v1 ######### webRtcTransport_options : ",
+        webRtcTransport_options
+      );
 
       // https://mediasoup.org/documentation/v3/mediasoup/api/#router-createWebRtcTransport
       let transport = await router.createWebRtcTransport(

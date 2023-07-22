@@ -136,13 +136,12 @@ function App() {
           { consumer: false },
           async ({ params }) => {
             // The server sends back params needed
+            console.log("V1 dtlsParams : ", params);
             // to create Send Transport on the client side
             if (params.error) {
               console.log(params.error);
               return;
             }
-
-            console.log(params);
 
             // creates a new WebRTC Transport to send media
             // based on the server's producer transport params
@@ -397,6 +396,11 @@ function App() {
               SS("dtlsParameters", dtlsParameters),
             ]);
 
+            console.log(
+              "h1 consumerTransport on(connect) - dtlsParameters ",
+              dtlsParameters
+            );
+
             try {
               // Signal local DTLS parameters to the server side transport
               // see server's socket.on('transport-recv-connect', ...)
@@ -505,7 +509,10 @@ function App() {
           { id: remoteProducerId, kind: params.kind, stream: stream },
         ]);
         // document.getElementById(`${remoteProducerId}_2`).srcObject = new MediaStream([track_2])
-        logger("connectRecvTransport", [SS("track", track)]);
+        logger("connectRecvTransport", [
+          SS("track", track),
+          SS("StreaM", stream),
+        ]);
         // logger("connectRecvTransport", [SS("track", track),SS("track_2", track_2) ]);
 
         // the server consumer started with media paused
@@ -579,10 +586,15 @@ function App() {
 
   async function getAllMediaStreams() {
     const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter((device) => device.kind == "videoinput");
+    const cameras = devices.filter(
+      (device) =>
+        device.kind == "videoinput" &&
+        device.label === "HP HD Camera (04f2:b66a)"
+    );
     const streams = [];
     if (cameras.length > 0) {
       for (const _camera of cameras) {
+        console.log("v1 ### CAMERA : ", cameras);
         const constraints = { deviceId: { exact: _camera.deviceId } };
         const _stream = await navigator.mediaDevices.getUserMedia({
           video: constraints,
@@ -754,9 +766,12 @@ function App() {
       </button>
 
       <h1>Items</h1>
-      {touristItems.map((item) => {
+      {touristItems.map((item, index) => {
         return (
-          <div style={{ border: "1px solid black", margin: "5px" }}>
+          <div
+            style={{ border: "1px solid black", margin: "5px" }}
+            key={`touristItems-${index}`}
+          >
             <p>
               <strong>name</strong> {`: ${item.name}`}
             </p>
@@ -814,8 +829,7 @@ function App() {
               acceptCallOffer(client);
             }}
           >
-            {" "}
-            {`client ${index}`}{" "}
+            {client.userId}
           </button>
         );
       })}
@@ -831,6 +845,7 @@ function App() {
                   width={200}
                   height={200}
                   srcObject={videoRef.stream}
+                  from={"Client"}
                 />
               );
             } else {
@@ -852,6 +867,7 @@ function App() {
                 id={videoRef.id}
                 width={200}
                 height={200}
+                from={"Local"}
                 srcObject={videoRef.stream}
               />
             );
