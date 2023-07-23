@@ -7,6 +7,17 @@
 /* https://mediasoup.org/documentation/v3/mediasoup/installation/ */
 import express from "express";
 const app = express();
+const appTwo = express();
+appTwo.listen(3001, () => {
+  console.log("SERVER TWO");
+});
+
+appTwo.get("/health-checkup-two", (req, res) => {
+  res.json({
+    serverName: SERVER_NAME,
+    message: "SERVER TWO Yeah, I'm good 👍",
+  });
+});
 
 import https from "httpolyglot";
 import fs from "fs";
@@ -152,8 +163,8 @@ let touristsItems = {}; // { {callId:[items]}, {callId:[items]}}
 // 2000-2999
 const createWorker = async () => {
   worker = await mediasoup.createWorker({
-    rtcMinPort: RTC_MIN_PORT,
-    rtcMaxPort: RTC_MAX_PORT,
+    rtcMinPort: parseInt(RTC_MIN_PORT),
+    rtcMaxPort: parseInt(RTC_MAX_PORT),
   });
   console.log(
     `worker pid ${worker.pid} RTC_MIN_PORT : ${RTC_MIN_PORT} -- RTC_MAX_PORT : ${RTC_MAX_PORT}`
@@ -1046,9 +1057,9 @@ const createWebRtcTransport = async (router) => {
             announcedIp: "127.0.0.1",
           },
         ],
-        // enableUdp: true,
+        enableUdp: true,
         enableTcp: true,
-        // preferUdp: true,
+        preferUdp: true,
       };
 
       console.log(
