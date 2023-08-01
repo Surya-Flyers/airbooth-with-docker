@@ -25,7 +25,8 @@ function SS(name, value = "") {
   }
 }
 
-const ENDPOINT = "https://127.0.0.1:3000/mediasoup";
+
+const ENDPOINT = "https://localhost:5000/mediasoup";
 const MEDIAS = {
   encodings: [
     {
@@ -588,8 +589,9 @@ function App() {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const cameras = devices.filter(
       (device) =>
-        device.kind == "videoinput" &&
-        device.label === "HP HD Camera (04f2:b66a)"
+        device.kind == "videoinput" 
+        // &&
+        // device.label === "HP HD Camera (04f2:b66a)"
     );
     const streams = [];
     if (cameras.length > 0) {
